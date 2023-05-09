@@ -5,6 +5,7 @@
 * https://lexical.dev/
 * https://playground.lexical.dev/
 * https://lexical.dev/docs/demos/plugins/markdown
+* https://zenn.dev/mktu/articles/6ff46411458823
 
 ## draft.js 参考
 * https://draftjs.org/
