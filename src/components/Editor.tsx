@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   EditorState,
@@ -10,6 +10,7 @@ import {
   AtomicBlockUtils,
   SelectionState,
   DraftHandleValue,
+  ContentState,
 } from "draft-js";
 
 import Editor from "@draft-js-plugins/editor";
@@ -98,15 +99,41 @@ export default function DraftJSEditor() {
   };
 
   const myKeyBindingFn = (e: any) => {
+    console.log("key", e.keyCode);
     if (e.keyCode === 83 && hasCommandModifier(e)) {
       return "myeditor-save";
     }
     return getDefaultKeyBinding(e);
   };
 
-  const onChange = (value: any) => {
-    setEditorState(value);
-  };
+  const onChange = useCallback((editorState: any) => {
+    setEditorState(editorState);
+    const contentState = editorState.getCurrentContent();
+    const blocks = contentState.getBlocksAsArray();
+    const updatedBlocks = blocks.map((block: any) => {
+      const text = block.getText();
+      if (text.startsWith("# ")) {
+        let level = 1;
+        while (text[level] === "#") {
+          level++;
+        }
+        const newBlock = block.merge({
+          type: `header-${level}`,
+          text: text.slice(level + 1),
+        });
+        return newBlock;
+      } else {
+        return block;
+      }
+    });
+    console.log("-----------------------------------");
+    console.log(updatedBlocks);
+    const updatedContentState =
+      ContentState.createFromBlockArray(updatedBlocks);
+    const newEditorState = EditorState.createWithContent(updatedContentState);
+    console.log(newEditorState);
+    setEditorState(newEditorState);
+  }, []);
 
   const handleDroppedFiles = (
     selection: SelectionState,
