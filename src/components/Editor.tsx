@@ -9,6 +9,7 @@ import {
   getDefaultKeyBinding,
   AtomicBlockUtils,
   SelectionState,
+  DraftHandleValue,
 } from "draft-js";
 
 import Editor from "@draft-js-plugins/editor";
@@ -107,13 +108,26 @@ export default function DraftJSEditor() {
     setEditorState(value);
   };
 
-  const handleDroppedFiles = async (
+  const handleDroppedFiles = (
     selection: SelectionState,
     files: Blob[]
-  ) => {
+  ): DraftHandleValue => {
     console.log(files);
-    const f = (await convertToBase64(files[0])) as string;
-    insertImage(f);
+    new Promise((resolve, reject) => {
+      const render = new FileReader();
+      render.onload = (event) => {
+        console.log(event);
+        const base64 = event.target?.result;
+        if (base64 && typeof base64 === "string") {
+          insertImage(base64);
+          resolve("");
+        } else {
+          reject("");
+        }
+      };
+      render.readAsDataURL(files[0]);
+    });
+    return "not-handled";
   };
 
   const insertImage = (url: string) => {
@@ -132,27 +146,12 @@ export default function DraftJSEditor() {
     );
   };
 
-  const convertToBase64 = (file: any) => {
-    return new Promise((resolve, reject) => {
-      const render = new FileReader();
-      render.onload = (event) => {
-        console.log(event);
-        const base64 = event.target?.result;
-        if (base64) {
-          resolve(base64);
-        } else {
-          reject("");
-        }
-      };
-      render.readAsDataURL(file);
-    });
-  };
-
   return (
     <>
       {editorEnable && (
         <div className="post">
           <Editor
+            placeholder="保存も送信もしません"
             editorState={editorState}
             onChange={onChange}
             plugins={plugins}
@@ -174,14 +173,6 @@ export default function DraftJSEditor() {
             )}
           </InlineToolbar>
         </div>
-        // <Editor
-        //   placeholder="保存も送信もしません"
-        //   editorKey="test-key"
-        //   editorState={editorState}
-        //   onChange={setEditorState}
-        //   handleKeyCommand={handleKeyCommand}
-        //   keyBindingFn={myKeyBindingFn}
-        // />
       )}
       <button
         className="border rounded-sm px-4 py-2"
