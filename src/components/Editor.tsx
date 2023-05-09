@@ -7,6 +7,8 @@ import {
   RichUtils,
   KeyBindingUtil,
   getDefaultKeyBinding,
+  AtomicBlockUtils,
+  SelectionState,
 } from "draft-js";
 
 import Editor from "@draft-js-plugins/editor";
@@ -24,8 +26,11 @@ import {
   HeadlineThreeButton,
 } from "@draft-js-plugins/buttons";
 
+import createImagePlugin from "@draft-js-plugins/image";
+
 import "draft-js/dist/Draft.css";
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css";
+import "@draft-js-plugins/image/lib/plugin.css";
 
 const keyName = "instant-markdown";
 
@@ -35,7 +40,11 @@ const keyName = "instant-markdown";
 export default function DraftJSEditor() {
   const [plugins, InlineToolbar] = useMemo(() => {
     const inlineToolbarPlugin = createInlineToolbarPlugin();
-    return [[inlineToolbarPlugin], inlineToolbarPlugin.InlineToolbar];
+    const imagePlugin = createImagePlugin();
+    return [
+      [inlineToolbarPlugin, imagePlugin],
+      inlineToolbarPlugin.InlineToolbar,
+    ];
   }, []);
 
   const [editorEnable, setEditorEnable] = useState(false);
@@ -98,6 +107,47 @@ export default function DraftJSEditor() {
     setEditorState(value);
   };
 
+  const handleDroppedFiles = async (
+    selection: SelectionState,
+    files: Blob[]
+  ) => {
+    console.log(files);
+    const f = (await convertToBase64(files[0])) as string;
+    insertImage(f);
+  };
+
+  const insertImage = (url: string) => {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "image",
+      "IMMUTABLE",
+      { src: url }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorState, {
+      currentContent: contentStateWithEntity,
+    });
+    onChange(
+      AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ")
+    );
+  };
+
+  const convertToBase64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const render = new FileReader();
+      render.onload = (event) => {
+        console.log(event);
+        const base64 = event.target?.result;
+        if (base64) {
+          resolve(base64);
+        } else {
+          reject("");
+        }
+      };
+      render.readAsDataURL(file);
+    });
+  };
+
   return (
     <>
       {editorEnable && (
@@ -108,6 +158,7 @@ export default function DraftJSEditor() {
             plugins={plugins}
             handleKeyCommand={handleKeyCommand}
             keyBindingFn={myKeyBindingFn}
+            handleDroppedFiles={handleDroppedFiles}
           />
           <InlineToolbar>
             {(externalProps) => (
