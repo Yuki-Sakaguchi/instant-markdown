@@ -1,9 +1,8 @@
-import MyEditor from "@/components/Editor";
-
+import MyEditor from "@/features/Editor";
 export default function Home() {
   return (
-    <main className="p-[100px]">
-      <div className="border p-5">
+    <main>
+      <div>
         <MyEditor />
       </div>
     </main>
