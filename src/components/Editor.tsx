@@ -8,7 +8,7 @@ import {
   getDefaultKeyBinding,
 } from "draft-js";
 
-import Editor, { createEditorStateWithText } from "@draft-js-plugins/editor";
+import Editor from "@draft-js-plugins/editor";
 
 import createInlineToolbarPlugin, {
   Separator,
@@ -102,7 +102,7 @@ export default function DraftJSEditor() {
   return (
     <>
       {editorEnable && (
-        <>
+        <div className="post">
           <Editor
             editorState={editorState}
             onChange={onChange}
@@ -114,14 +114,14 @@ export default function DraftJSEditor() {
                 <ItalicButton {...externalProps} />
                 <BoldButton {...externalProps} />
                 <UnderlineButton {...externalProps} />
-                {/* <Separator {...externalProps} /> */}
+                <Separator />
                 <HeadlineOneButton {...externalProps} />
                 <HeadlineTwoButton {...externalProps} />
                 <HeadlineThreeButton {...externalProps} />
               </>
             )}
           </InlineToolbar>
-        </>
+        </div>
         // <Editor
         //   placeholder="保存も送信もしません"
         //   editorKey="test-key"
