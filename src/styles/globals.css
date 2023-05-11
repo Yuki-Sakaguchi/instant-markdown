@@ -49,21 +49,20 @@ h1 {
 }
 
 .editor-container {
-  margin: 20px auto 20px auto;
-  border-radius: 2px;
-  max-width: 600px;
   color: #000;
   position: relative;
   line-height: 20px;
   font-weight: 400;
   text-align: left;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .editor-inner {
   background: #fff;
   position: relative;
+  flex: 1;
 }
 
 .editor-input {
@@ -352,8 +351,6 @@ pre::-webkit-scrollbar-thumb {
   margin-bottom: 1px;
   background: #fff;
   padding: 4px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   vertical-align: middle;
 }
 

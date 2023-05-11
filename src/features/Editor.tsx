@@ -1,3 +1,4 @@
+import { FC } from "react";
 import ExampleTheme from "./theme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
@@ -49,7 +50,12 @@ const editorConfig = {
   ],
 };
 
-export default function Editor() {
+type Props = {
+  item?: Item;
+};
+
+export const Editor: FC<Props> = ({ item }) => {
+  console.log(item);
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container">
@@ -70,4 +76,4 @@ export default function Editor() {
       </div>
     </LexicalComposer>
   );
-}
+};
