@@ -1,5 +1,6 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import ExampleTheme from "./theme";
+import { $createTextNode } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -15,6 +16,7 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 import ActionsPlugin from "./plugins/ActionsPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
@@ -54,8 +56,20 @@ type Props = {
   item?: Item;
 };
 
+function MyCustomSetBodyPlugin() {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    console.log(editor.getEditorState());
+    // editor.setEditorState()
+  }, []);
+
+  return null;
+}
+
 export const Editor: FC<Props> = ({ item }) => {
   console.log(item);
+
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container">
@@ -71,6 +85,7 @@ export const Editor: FC<Props> = ({ item }) => {
           <LinkPlugin />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           <CodeHighlightPlugin />
+          <MyCustomSetBodyPlugin />
         </div>
         <ActionsPlugin />
       </div>
