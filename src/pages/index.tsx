@@ -1,4 +1,4 @@
-import { Editor } from "@/features/Editor";
+import { Tiptap } from "@/features/Editor";
 import { SideMenu } from "@/features/SideMenu";
 import { useEffect, useState } from "react";
 
@@ -10,21 +10,21 @@ export default function Home() {
     setList([
       {
         id: 1,
-        title: "test",
+        title: "test1",
         date: new Date(),
-        body: "body",
+        body: "body1",
       },
       {
         id: 2,
-        title: "test",
+        title: "test2",
         date: new Date(),
-        body: "body",
+        body: "body2",
       },
       {
         id: 3,
-        title: "test",
+        title: "test3",
         date: new Date(),
-        body: "body",
+        body: "body3",
       },
     ]);
   }, []);
@@ -41,7 +41,7 @@ export default function Home() {
             />
           </div>
           <div className="flex-1">
-            <Editor item={selectetItem} />
+            <Tiptap item={selectetItem} />
           </div>
         </div>
       </div>
