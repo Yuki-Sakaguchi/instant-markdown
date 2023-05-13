@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@lexical/react": "^0.10.0",
     "@lexical/selection": "^0.10.0",
     "@lexical/yjs": "^0.10.0",
