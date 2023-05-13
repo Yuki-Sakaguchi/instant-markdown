@@ -5,8 +5,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { useList } from "./useList";
 import Image from "next/image";
 
+/**
+ * エディターコンポーネント
+ */
 export const Tiptap: FC = () => {
-  const { selectedItem, selectedItemId } = useList();
+  const { selectedItem, selectedItemId, onChange } = useList();
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -14,6 +18,10 @@ export const Tiptap: FC = () => {
         placeholder: "メモを書きましょう！",
       }),
     ],
+    onUpdate(data) {
+      console.log("update", data.editor.getHTML());
+      onChange(data.editor.getHTML());
+    },
   });
 
   useEffect(() => {
