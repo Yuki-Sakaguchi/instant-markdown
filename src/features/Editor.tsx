@@ -41,6 +41,7 @@ export const Tiptap: FC = () => {
               alt=""
               width="200"
               height="200"
+              priority={true}
             />
             <p className="text-center text-[#adb5bd] leading-7">
               メモはサーバーには送信されません。

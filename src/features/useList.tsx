@@ -45,7 +45,7 @@ export const useList = () => {
     const newItem = list.find((item) => item.id === selectedItemId);
     if (newItem == null) return;
     const baseList = list.filter((item) => item.id !== selectedItemId);
-    setList([...baseList, { ...newItem, body }]);
+    setList([...baseList, { ...newItem, body, updatedAt: new Date() }]);
   };
 
   const addItem = () => {
@@ -54,7 +54,8 @@ export const useList = () => {
       {
         id: uuidv4(),
         title: "no title...",
-        date: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         body: "",
       },
     ]);

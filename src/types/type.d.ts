@@ -1,6 +1,7 @@
 type Item = {
   id: string;
   title: string;
-  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
   body: string;
 };
