@@ -45,9 +45,11 @@ export const useList = () => {
     if (targetItem == null) return;
 
     // 本文の中の１つ目のタグの内容をタイトルに置き換える
-    const regex = /<[^>]*>([^<]*)<\/[^>]*>/;
-    const match = body.match(regex);
-    const title = match != null ? match[1] : "no title";
+    const title = (() => {
+      const regex = /<[^>]*>([^<]*)<\/[^>]*>/;
+      const match = body.match(regex);
+      return match == null || match[1] === "" ? "no title" : match[1];
+    })();
 
     // 更新対象のアイテムを作成
     const updateItem = {

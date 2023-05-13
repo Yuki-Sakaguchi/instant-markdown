@@ -9,7 +9,7 @@ import Image from "next/image";
  * エディターコンポーネント
  */
 export const Tiptap: FC = () => {
-  const { selectedItem, selectedItemId, onChange } = useList();
+  const { selectedItem, onChange } = useList();
 
   const editor = useEditor({
     extensions: [
