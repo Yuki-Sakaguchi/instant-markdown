@@ -15,7 +15,6 @@ export const useList = () => {
   const [selectedItemId, setSelectedItemId] = useAtom(SelectedItemIdAtom);
 
   const selectedItem = useMemo(() => {
-    console.log(selectedItemId);
     if (list == null || list.length == 0 || selectedItemId == "") return null;
     return list.find((item) => item.id === selectedItemId);
   }, [list, selectedItemId]);
@@ -24,7 +23,6 @@ export const useList = () => {
   useEffect(() => {
     const data = getContent();
     if (data != null) {
-      console.log("初回", data);
       setList([...data]);
     }
   }, []);

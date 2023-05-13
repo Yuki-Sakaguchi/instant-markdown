@@ -19,13 +19,11 @@ export const Tiptap: FC = () => {
       }),
     ],
     onUpdate(data) {
-      console.log("update", data.editor.getHTML());
       onChange(data.editor.getHTML());
     },
   });
 
   useEffect(() => {
-    console.log(selectedItem, selectedItemId);
     if (editor == null || selectedItem == null) return;
     editor.commands.setContent(selectedItem.body);
   }, [selectedItem, editor]);
