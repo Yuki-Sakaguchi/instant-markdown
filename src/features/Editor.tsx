@@ -16,7 +16,10 @@ export const Tiptap: FC<Props> = ({ item }) => {
     if (editor == null || item == null) return;
     editor.commands.setContent(item.body);
   }, [item, editor]);
-  console.log(item);
 
-  return <EditorContent editor={editor} />;
+  return (
+    <div className="h-screen p-4">
+      <EditorContent className="h-full" editor={editor} />
+    </div>
+  );
 };
