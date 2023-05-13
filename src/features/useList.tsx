@@ -40,10 +40,27 @@ export const useList = () => {
   };
 
   const onChange = (body: string) => {
-    const newItem = list.find((item) => item.id === selectedItemId);
-    if (newItem == null) return;
+    // 選択しているアイテムがなければ終了
+    const targetItem = list.find((item) => item.id === selectedItemId);
+    if (targetItem == null) return;
+
+    // 本文の中の１つ目のタグの内容をタイトルに置き換える
+    const regex = /<[^>]*>([^<]*)<\/[^>]*>/;
+    const match = body.match(regex);
+    const title = match != null ? match[1] : "no title";
+
+    // 更新対象のアイテムを作成
+    const updateItem = {
+      ...targetItem,
+      title,
+      body,
+      updatedAt: new Date(),
+    };
+
+    // 選択中以外のアイテムはそのまま更新したいので取得
     const baseList = list.filter((item) => item.id !== selectedItemId);
-    setList([...baseList, { ...newItem, body, updatedAt: new Date() }]);
+
+    setList([...baseList, updateItem]);
   };
 
   const addItem = () => {
