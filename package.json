@@ -12,6 +12,7 @@
     "@lexical/react": "^0.10.0",
     "@lexical/selection": "^0.10.0",
     "@lexical/yjs": "^0.10.0",
+    "@tiptap/extension-placeholder": "^2.0.3",
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",

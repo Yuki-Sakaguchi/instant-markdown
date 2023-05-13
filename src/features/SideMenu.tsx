@@ -1,17 +1,10 @@
-import type { Dispatch, FC, SetStateAction } from "react";
+import { FC, useState } from "react";
 import clsx from "clsx";
+import { useList } from "./useList";
 
-type Props = {
-  list: Item[];
-  selectedItem?: Item;
-  setSelectedItem: Dispatch<SetStateAction<Item | undefined>>;
-};
-
-export const SideMenu: FC<Props> = ({
-  list,
-  selectedItem,
-  setSelectedItem,
-}) => {
+export const SideMenu: FC = () => {
+  const { list, addItem } = useList();
+  const [selectedItem, setSelectedItem] = useState<Item>();
   return (
     <div className="h-full px-4 py-8 bg-gray-800 text-white">
       <ul>
@@ -33,6 +26,12 @@ export const SideMenu: FC<Props> = ({
             </li>
           ))}
       </ul>
+      <button
+        className="bg-white text-gray-800 w-full py-2 rounded-tr-md rounded-bl-md"
+        onClick={addItem}
+      >
+        add
+      </button>
     </div>
   );
 };
