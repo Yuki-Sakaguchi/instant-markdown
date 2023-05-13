@@ -10,6 +10,7 @@ export const useList = () => {
   const [selectedItemId, setSelectedItemId] = useState("");
 
   const selectedItem = useMemo(() => {
+    console.log(selectedItemId);
     if (list == null || list.length == 0 || selectedItemId == "") return null;
     return list.find((item) => item.id === selectedItemId);
   }, [list, selectedItemId]);
@@ -35,10 +36,6 @@ export const useList = () => {
     return JSON.parse(raw);
   };
 
-  const selectItem = (id: string) => {
-    setSelectedItemId(id);
-  };
-
   const onChange = (body: string) => {
     const newItem = list.find((item) => item.id === selectedItemId);
     if (newItem == null) return;
@@ -62,8 +59,9 @@ export const useList = () => {
     list,
     selectedItemId,
     selectedItem,
+    setList,
+    setSelectedItemId,
     addItem,
-    selectItem,
     onChange,
   };
 };
