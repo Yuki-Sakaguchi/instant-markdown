@@ -1,5 +1,6 @@
 import { atom, useAtom } from "jotai";
 import { useEffect, useMemo } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const keyName = "instant-markdown";
 
@@ -51,8 +52,8 @@ export const useList = () => {
     setList([
       ...list,
       {
-        id: (list.length + 1).toString(),
-        title: "title" + (list.length + 1),
+        id: uuidv4(),
+        title: "no title...",
         date: new Date(),
         body: "",
       },
