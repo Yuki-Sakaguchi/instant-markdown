@@ -66,16 +66,18 @@ export const useList = () => {
   };
 
   const addItem = () => {
+    const id = uuidv4();
     setList([
       ...list,
       {
-        id: uuidv4(),
+        id,
         title: "no title...",
         createdAt: new Date(),
         updatedAt: new Date(),
         body: "",
       },
     ]);
+    setSelectedItemId(id);
   };
 
   return {
