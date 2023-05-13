@@ -1,13 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { atom, useAtom } from "jotai";
+import { useEffect, useMemo } from "react";
 
 export const keyName = "instant-markdown";
+
+export const ListAtom = atom<Item[]>([]);
+export const SelectedItemIdAtom = atom<string>("");
 
 /**
  * リストを修正するhooks
  */
 export const useList = () => {
-  const [list, setList] = useState<Item[]>([]);
-  const [selectedItemId, setSelectedItemId] = useState("");
+  const [list, setList] = useAtom(ListAtom);
+  const [selectedItemId, setSelectedItemId] = useAtom(SelectedItemIdAtom);
 
   const selectedItem = useMemo(() => {
     console.log(selectedItemId);
