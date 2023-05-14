@@ -3,8 +3,7 @@
 
 https://instant-markdown.vercel.app/
 
-![スクリーンショット 2023-05-14 0 42 59](https://github.com/Yuki-Sakaguchi/instant-markdown/assets/16290220/4b6f9d8e-3f50-4b38-971e-aeaf3ce23f69)
-
+![スクリーンショット 2023-05-15 0 03 52](https://github.com/Yuki-Sakaguchi/instant-markdown/assets/16290220/7dd3d392-fbb5-4d1b-8563-95124b9b68eb)
 
 ## エディタ調査
 ### Tiptap 参考
