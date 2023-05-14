@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main>
       <Head>
-        <title>Instant Note</title>
+        <title>Instant Note (β)</title>
       </Head>
       <div>
         <div className="flex h-screen">
