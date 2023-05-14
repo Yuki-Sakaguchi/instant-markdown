@@ -94,6 +94,10 @@ export const useList = () => {
     setList([...baseList]);
   };
 
+  const deleteAll = () => {
+    setList([]);
+  };
+
   return {
     list,
     selectedItemId,
@@ -103,5 +107,6 @@ export const useList = () => {
     onChange,
     addItem,
     removeItem,
+    deleteAll,
   };
 };

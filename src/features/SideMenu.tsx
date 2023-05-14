@@ -44,7 +44,7 @@ const MenuItem: FC<{ id: string; title: string; selected: boolean }> = ({
 };
 
 export const SideMenu: FC = () => {
-  const { list, selectedItem, addItem } = useList();
+  const { list, selectedItem, addItem, deleteAll } = useList();
 
   // 作成日の降順にしたリスト
   const displayList = useMemo(() => {
@@ -57,6 +57,12 @@ export const SideMenu: FC = () => {
     });
   }, [list]);
 
+  const deleteAllItem = () => {
+    if (confirm("全ての記事を削除してもよろしいでしょうか？")) {
+      deleteAll();
+    }
+  };
+
   return (
     <div className="flex flex-col h-full px-4 pt-8 pb-4 bg-gray-800 text-white">
       <h1 className="text-center text-lg font-bold mb-7">
@@ -68,6 +74,14 @@ export const SideMenu: FC = () => {
       >
         <PlusIcon className="w-[20px] m-auto" />
       </button>
+      {displayList?.length > 0 && (
+        <button
+          className="mt-2 bg-white text-gray-800 w-full py-2 rounded-tr-md rounded-bl-md transition-opacity hover:opacity-80"
+          onClick={deleteAllItem}
+        >
+          <TrashIcon className="w-[20px] m-auto" />
+        </button>
+      )}
       <div className="flex-1 mt-4 overflow-scroll">
         {displayList && displayList.length > 0 && (
           <ul className="overflow-scroll">
