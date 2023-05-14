@@ -71,7 +71,7 @@ export const useList = () => {
       ...list,
       {
         id,
-        title: "no title...",
+        title: "no title",
         createdAt: new Date(),
         updatedAt: new Date(),
         body: "",

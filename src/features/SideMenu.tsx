@@ -37,7 +37,7 @@ export const SideMenu: FC = () => {
               )}
             >
               <button
-                className="text-left w-full py-2 hover:opacity-80"
+                className="overflow-hidden text-ellipsis whitespace-nowrap text-left w-full py-2 hover:opacity-80"
                 onClick={() => setSelectedItemId(item.id)}
               >
                 {item.title}
