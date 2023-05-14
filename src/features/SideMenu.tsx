@@ -1,10 +1,50 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useList } from "./useList";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
+const MenuItem: FC<{ id: string; title: string; selected: boolean }> = ({
+  id,
+  title,
+  selected,
+}) => {
+  const { setSelectedItemId, removeItem } = useList();
+  const [hover, setHover] = useState(false);
+
+  const deleteItem = (id: string) => {
+    if (confirm("記事を削除してもよろしいでしょうか？")) {
+      removeItem(id);
+    }
+  };
+
+  return (
+    <li
+      className={clsx(
+        "flex",
+        "hover:opacity-80",
+        !selected && "opacity-100",
+        selected && "opacity-50 pointer-events-none"
+      )}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
+    >
+      <button
+        className="overflow-hidden text-ellipsis whitespace-nowrap text-left w-full py-2"
+        onClick={() => setSelectedItemId(id)}
+      >
+        {title}
+      </button>
+      {hover && (
+        <button className="p-2" onClick={() => deleteItem(id)}>
+          <TrashIcon className="w-[16px]" />
+        </button>
+      )}
+    </li>
+  );
+};
+
 export const SideMenu: FC = () => {
-  const { list, selectedItem, setSelectedItemId, addItem } = useList();
+  const { list, selectedItem, addItem } = useList();
 
   // 作成日の降順にしたリスト
   const displayList = useMemo(() => {
@@ -32,20 +72,12 @@ export const SideMenu: FC = () => {
         {displayList && displayList.length > 0 && (
           <ul className="overflow-scroll">
             {displayList.map((item) => (
-              <li
+              <MenuItem
                 key={item.id}
-                className={clsx(
-                  item !== selectedItem && "opacity-100",
-                  item === selectedItem && "opacity-50 pointer-events-none"
-                )}
-              >
-                <button
-                  className="overflow-hidden text-ellipsis whitespace-nowrap text-left w-full py-2 hover:opacity-80"
-                  onClick={() => setSelectedItemId(item.id)}
-                >
-                  {item.title}
-                </button>
-              </li>
+                id={item.id}
+                title={item.title}
+                selected={item === selectedItem}
+              />
             ))}
           </ul>
         )}
