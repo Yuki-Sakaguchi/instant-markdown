@@ -67,6 +67,7 @@ export const SideMenu: FC = () => {
     <div className="flex flex-col h-full px-4 pt-8 pb-4 bg-gray-800 text-white">
       <h1 className="text-center text-lg font-bold mb-7">
         🚀 Instant Note (β)
+        <p className="text-xs font-normal">v{process.env.VERSION}</p>
       </h1>
       <button
         className="bg-white text-gray-800 w-full py-2 rounded-tr-md rounded-bl-md transition-opacity hover:opacity-80"
