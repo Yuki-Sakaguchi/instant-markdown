@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 export const keyName = "instant-markdown";
 
 export const ListAtom = atom<Item[]>([]);
+export const IsEnableAtom = atom<boolean>(false);
 export const SelectedItemIdAtom = atom<string>("");
 
 /**
@@ -12,6 +13,7 @@ export const SelectedItemIdAtom = atom<string>("");
  */
 export const useList = () => {
   const [list, setList] = useAtom(ListAtom);
+  const [isEnable, setIsEnable] = useAtom(IsEnableAtom);
   const [selectedItemId, setSelectedItemId] = useAtom(SelectedItemIdAtom);
 
   const selectedItem = useMemo(() => {
@@ -25,11 +27,13 @@ export const useList = () => {
     if (data != null) {
       setList([...data]);
     }
+    setIsEnable(true);
   }, []);
 
   // list が更新されたら LocalStorage を更新する
   useEffect(() => {
-    if (list == null || list.length === 0) return;
+    if (!isEnable) return;
+    if (list == null) return;
     localStorage.setItem(keyName, JSON.stringify(list, null, 2));
   }, [list]);
 
