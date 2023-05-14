@@ -29,7 +29,7 @@ export const Tiptap: FC = () => {
   }, [selectedItem, editor]);
 
   return (
-    <div className="h-screen pl-4 py-4">
+    <div className="h-full pl-4 py-4">
       {selectedItem == null ? (
         <div className="h-full flex justify-center items-center">
           <div>

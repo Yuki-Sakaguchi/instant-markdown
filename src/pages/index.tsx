@@ -9,7 +9,7 @@ export default function Home() {
         <title>Instant Note</title>
       </Head>
       <div>
-        <div className="flex">
+        <div className="flex h-screen">
           <div className="w-[200px]">
             <SideMenu />
           </div>
