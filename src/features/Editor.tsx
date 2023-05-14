@@ -9,7 +9,7 @@ import { format } from "date-fns";
 
 const AboutView: FC = () => {
   return (
-    <div>
+    <div className="px-5">
       <Image
         className="mx-auto mb-3"
         src="/images/undraw_programmer_re_owql.svg"
@@ -138,6 +138,7 @@ export const Tiptap: FC = () => {
             <time className="block text-xs text-gray-400">
               更新日 : {formatDate(selectedItem.updatedAt)}
             </time>
+            <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
           </div>
           <EditorContent className="flex-1" editor={editor} />
           <button

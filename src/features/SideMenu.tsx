@@ -64,9 +64,11 @@ export const SideMenu: FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full px-4 pt-8 pb-4 bg-gray-800 text-white">
+    <div className="flex flex-col h-full px-4 pb-4 bg-gray-800 text-white">
       <h1 className="text-center text-lg font-bold mb-7">
-        🚀 Instant Note (β)
+        <div className="flex justify-center items-center">
+          🚀 Instant Note<span className="ml-2 text-xs">(β)</span>
+        </div>
         <p className="text-xs font-normal">v{process.env.VERSION}</p>
       </h1>
       <button
