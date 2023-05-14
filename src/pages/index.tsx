@@ -43,7 +43,7 @@ export default function Home() {
         <title>Instant Note (β)</title>
       </Head>
       <div className="flex flex-col h-screen">
-        <header className="px-1 flex h-10 bg-gray-800">
+        <header className="relative px-1 flex h-10 bg-gray-800 z-20">
           {sp &&
             (isMenuOpen ? (
               <button className="p-1" onClick={() => setIsMenuOpen(false)}>
@@ -61,11 +61,17 @@ export default function Home() {
               "transition-transform",
               isMenuOpen && "translate-x-0",
               !isMenuOpen && "-translate-x-full",
-              "absolute top-0 left-0 w-[200px] h-full z-10"
+              "absolute top-0 left-0 w-[200px] h-full z-20"
             )}
           >
             <SideMenu />
           </div>
+          {sp && isMenuOpen && (
+            <div
+              className="fixed top-0 left-0 w-full h-full z-10"
+              onClick={() => setIsMenuOpen(false)}
+            />
+          )}
           <div
             className={clsx(
               "transition-all",
