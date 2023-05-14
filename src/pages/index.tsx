@@ -4,10 +4,12 @@ import clsx from "clsx";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Bars2Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useList } from "@/features/useList";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [sp, setSp] = useState(false);
+  const { selectedItem } = useList();
 
   function resizeHandler() {
     if (window.innerWidth >= 768) {
@@ -18,6 +20,8 @@ export default function Home() {
       setSp(true);
     }
   }
+
+  // リサイズ用
   useEffect(() => {
     window.addEventListener("resize", resizeHandler);
     resizeHandler();
@@ -25,6 +29,13 @@ export default function Home() {
       window.removeEventListener("resize", resizeHandler);
     };
   }, []);
+
+  // スマホでアイテムが切り替わったらメニューを閉じる
+  useEffect(() => {
+    if (sp && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [selectedItem]);
 
   return (
     <main>
