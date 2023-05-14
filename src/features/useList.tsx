@@ -21,22 +21,6 @@ export const useList = () => {
     return list.find((item) => item.id === selectedItemId);
   }, [list, selectedItemId]);
 
-  // 初回に LocalStorage からデータを取得して設定する
-  useEffect(() => {
-    const data = getContent();
-    if (data != null) {
-      setList([...data]);
-    }
-    setIsEnable(true);
-  }, []);
-
-  // list が更新されたら LocalStorage を更新する
-  useEffect(() => {
-    if (!isEnable) return;
-    if (list == null) return;
-    localStorage.setItem(keyName, JSON.stringify(list, null, 2));
-  }, [list]);
-
   const getContent = () => {
     const raw = localStorage.getItem(keyName);
     if (raw == null) return null;
@@ -97,6 +81,23 @@ export const useList = () => {
   const deleteAll = () => {
     setList([]);
   };
+
+  // 初回に LocalStorage からデータを取得して設定する
+  useEffect(() => {
+    if (isEnable) return;
+    const data = getContent();
+    if (data != null) {
+      setList([...data]);
+    }
+    setIsEnable(true);
+  }, []);
+
+  // list が更新されたら LocalStorage を更新する
+  useEffect(() => {
+    if (!isEnable) return;
+    if (list == null) return;
+    localStorage.setItem(keyName, JSON.stringify(list, null, 2));
+  }, [list]);
 
   return {
     list,
