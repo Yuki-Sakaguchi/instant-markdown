@@ -27,6 +27,7 @@ export const Tiptap: FC = () => {
   useEffect(() => {
     if (editor == null || selectedItem == null) return;
     editor.commands.setContent(selectedItem.body);
+    editor.commands.focus();
   }, [selectedItem, editor]);
 
   const deleteItem = () => {
