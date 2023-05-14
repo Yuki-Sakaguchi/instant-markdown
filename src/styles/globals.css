@@ -8,7 +8,6 @@
   height: 100%;
   color: #242424;
   padding-right: 52px;
-  overflow: scroll;
 
   p.is-editor-empty:first-child::before {
     color: #adb5bd;
