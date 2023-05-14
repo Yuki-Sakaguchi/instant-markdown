@@ -80,13 +80,24 @@ export const useList = () => {
     setSelectedItemId(id);
   };
 
+  const removeItem = (id: string) => {
+    // 選択しているアイテムがなければ終了
+    const targetItem = list.find((item) => item.id === id);
+    if (targetItem == null) return;
+
+    // 選択中以外のアイテム以外で更新
+    const baseList = list.filter((item) => item.id !== id);
+    setList([...baseList]);
+  };
+
   return {
     list,
     selectedItemId,
     selectedItem,
     setList,
     setSelectedItemId,
-    addItem,
     onChange,
+    addItem,
+    removeItem,
   };
 };
