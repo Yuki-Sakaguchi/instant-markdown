@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@custom-media --phone (min-width: 544px);
+@custom-media --tablet (min-width: 768px);
+@custom-media --desktop (min-width: 992px);
+@custom-media --desktop-lg (min-width: 1200px);
+
 /* Basic editor styles */
 .ProseMirror {
   outline: none;
   height: 100%;
   color: #242424;
-  padding-right: 52px;
+  padding-right: 1rem;
+
+  @media (--tablet) {
+    padding-right: 52px;
+  }
 
   p.is-editor-empty:first-child::before {
     color: #adb5bd;
