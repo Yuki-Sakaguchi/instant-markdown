@@ -1,11 +1,13 @@
 import { FC, useEffect, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import TiptapImage from "@tiptap/extension-image";
 import { useList } from "./useList";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
+import { handleDropImage } from "@/utils/ImageLoader";
 
 const AboutView: FC = () => {
   return (
@@ -73,10 +75,19 @@ export const Tiptap: FC = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      TiptapImage.configure({
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "border",
+        },
+      }),
       Placeholder.configure({
         placeholder: "メモを書きましょう！",
       }),
     ],
+    editorProps: {
+      handleDrop: handleDropImage,
+    },
     onUpdate,
   });
 
