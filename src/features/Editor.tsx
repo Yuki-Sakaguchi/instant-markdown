@@ -5,9 +5,11 @@ import Placeholder from "@tiptap/extension-placeholder";
 import TiptapImage from "@tiptap/extension-image";
 import { useList } from "./useList";
 import Image from "next/image";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { handleDropImage } from "@/utils/ImageLoader";
+import Modal from "react-modal";
+Modal.setAppElement("#__next");
 
 const AboutView: FC = () => {
   return (
@@ -71,6 +73,7 @@ export const Tiptap: FC = () => {
   const { isComposing } = useComposing();
   const [updateTimer, setUpdateTimer] = useState<NodeJS.Timeout>();
   const [cursorPoint, setCursorPoint] = useState(0);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -121,6 +124,9 @@ export const Tiptap: FC = () => {
     return format(new Date(date), "yyyy-MM-dd HH:mm:ss");
   }
 
+  // 初回にモーダルの配置を設定する
+  useEffect(() => {}, []);
+
   // IME判定後もアップデート処理を実行
   useEffect(() => {
     onUpdate();
@@ -135,7 +141,7 @@ export const Tiptap: FC = () => {
   }, [selectedItem, editor]);
 
   return (
-    <div className="h-full pl-4">
+    <div id="editor" className="relative h-full pl-4">
       {selectedItem == null ? (
         <div className="h-full flex justify-center items-center">
           <AboutView />
@@ -152,12 +158,30 @@ export const Tiptap: FC = () => {
             <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
           </div>
           <EditorContent className="flex-1" editor={editor} />
-          <button
-            className="absolute top-3 right-3 p-2 transition-opacity opacity-50 hover:opacity-100"
-            onClick={deleteItem}
+          <div className="flex flex-col absolute top-3 right-3 p-2">
+            <button
+              className="transition-opacity opacity-50 hover:opacity-100"
+              onClick={deleteItem}
+            >
+              <TrashIcon className="w-[20px]" />
+            </button>
+            <button
+              className="mt-5 transition-opacity opacity-50 hover:opacity-100"
+              onClick={() => setIsOpenModal(true)}
+            >
+              <ExclamationCircleIcon className="w-[20px]" />
+            </button>
+          </div>
+          <Modal
+            isOpen={isOpenModal}
+            overlayClassName="absolute inset-0 bg-opacity-75 bg-white"
+            parentSelector={() => document.querySelector("#editor")!}
+            shouldCloseOnOverlayClick={true}
+            onRequestClose={() => setIsOpenModal(false)}
           >
-            <TrashIcon className="w-[20px]" />
-          </button>
+            test
+            <button onClick={() => setIsOpenModal(false)}></button>
+          </Modal>
         </div>
       )}
     </div>
