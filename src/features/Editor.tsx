@@ -1,14 +1,20 @@
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, useEffect, useState } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import TiptapImage from "@tiptap/extension-image";
 import { useList } from "./useList";
 import Image from "next/image";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { handleDropImage } from "@/utils/ImageLoader";
+import Modal from "react-modal";
+import { SetStateAction } from "jotai";
+Modal.setAppElement("#__next");
 
+/**
+ * エディター以外のデフォルト表示
+ */
 const AboutView: FC = () => {
   return (
     <div className="px-5">
@@ -36,6 +42,130 @@ const AboutView: FC = () => {
   );
 };
 
+/**
+ * コマンドのショートカットを表示するモーダル
+ */
+const CommandModal: FC<{
+  isOpenModal: boolean;
+  setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+}> = ({ isOpenModal, setIsOpenModal }) => {
+  const commandList = [
+    { name: "太字", shortcut: ["⌘", "b"] },
+    { name: "斜字", shortcut: ["⌘", "i"] },
+    { name: "打ち消し線", shortcut: ["⌘", "shift", "x"] },
+    { name: "コード", shortcut: ["⌘", "e"] },
+  ];
+  return (
+    <Modal
+      isOpen={isOpenModal}
+      overlayClassName="absolute inset-0 bg-opacity-75 bg-white z-50"
+      parentSelector={() => document.querySelector("#editor-wrapper")!}
+      shouldCloseOnOverlayClick={true}
+      onRequestClose={() => setIsOpenModal(false)}
+    >
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                コマンド
+              </th>
+              <th scope="col" className="px-6 py-3">
+                ショートカット
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {commandList.map(({ name, shortcut }, index) => (
+              <tr
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                key={index}
+              >
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {name}
+                </th>
+                <td className="px-6 py-4">
+                  <p
+                    className="flex"
+                    dangerouslySetInnerHTML={{
+                      __html: shortcut
+                        .map(
+                          (command) =>
+                            "<pre style='background-color: rgba(0, 0, 0, 0.1); padding: 2px 6px; margin: 0 4px; border-radius: 2px'>" +
+                            command +
+                            "</pre>"
+                        )
+                        .join("+"),
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Modal>
+  );
+};
+
+/**
+ * ヘッダーのタグメニュー
+ */
+const HeaderMenu: FC<{ editor: Editor }> = ({ editor }) => {
+  return (
+    <div className="fixed w-full bg-gray-200 px-4 py-2 z-20 flex gap-3">
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 1 }).run()
+        }
+      >
+        <i className="ri-h-1"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 2 }).run()
+        }
+      >
+        <i className="ri-h-2"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 3 }).run()
+        }
+      >
+        <i className="ri-h-3"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 4 }).run()
+        }
+      >
+        <i className="ri-h-4"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 5 }).run()
+        }
+      >
+        <i className="ri-h-5"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 6 }).run()
+        }
+      >
+        <i className="ri-h-6"></i>
+      </button>
+    </div>
+  );
+};
+
+/**
+ * IMEかどうか判定するhooks
+ */
 function useComposing() {
   const [isComposing, setIsComposing] = useState(false);
 
@@ -71,6 +201,7 @@ export const Tiptap: FC = () => {
   const { isComposing } = useComposing();
   const [updateTimer, setUpdateTimer] = useState<NodeJS.Timeout>();
   const [cursorPoint, setCursorPoint] = useState(0);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -121,6 +252,9 @@ export const Tiptap: FC = () => {
     return format(new Date(date), "yyyy-MM-dd HH:mm:ss");
   }
 
+  // 初回にモーダルの配置を設定する
+  useEffect(() => {}, []);
+
   // IME判定後もアップデート処理を実行
   useEffect(() => {
     onUpdate();
@@ -135,31 +269,46 @@ export const Tiptap: FC = () => {
   }, [selectedItem, editor]);
 
   return (
-    <div className="h-full pl-4">
-      {selectedItem == null ? (
-        <div className="h-full flex justify-center items-center">
-          <AboutView />
-        </div>
-      ) : (
-        <div className="overflow-scroll relative h-full flex flex-col py-4">
-          <div className="mb-4">
-            <time className="block text-xs text-gray-400">
-              作成日 : {formatDate(selectedItem.createdAt)}
-            </time>
-            <time className="block text-xs text-gray-400">
-              更新日 : {formatDate(selectedItem.updatedAt)}
-            </time>
-            <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
+    <>
+      {editor != null && selectedItem != null && <HeaderMenu editor={editor} />}
+      <div id="editor" className="relative h-full pl-4">
+        {selectedItem == null ? (
+          <div className="h-full flex justify-center items-center">
+            <AboutView />
           </div>
-          <EditorContent className="flex-1" editor={editor} />
-          <button
-            className="absolute top-3 right-3 p-2 transition-opacity opacity-50 hover:opacity-100"
-            onClick={deleteItem}
-          >
-            <TrashIcon className="w-[20px]" />
-          </button>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div className="overflow-scroll relative h-full flex flex-col pt-16 pb-4">
+            <div className="flex flex-col absolute top-12 right-3 p-2">
+              <button
+                className="transition-opacity opacity-50 hover:opacity-100"
+                onClick={deleteItem}
+              >
+                <TrashIcon className="w-[20px]" />
+              </button>
+              <button
+                className="mt-5 transition-opacity opacity-50 hover:opacity-100"
+                onClick={() => setIsOpenModal(true)}
+              >
+                <ExclamationCircleIcon className="w-[20px]" />
+              </button>
+            </div>
+            <div className="mb-4">
+              <time className="block text-xs text-gray-400">
+                作成日 : {formatDate(selectedItem.createdAt)}
+              </time>
+              <time className="block text-xs text-gray-400">
+                更新日 : {formatDate(selectedItem.updatedAt)}
+              </time>
+              <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
+            </div>
+            <EditorContent className="flex-1" editor={editor} />
+            <CommandModal
+              isOpenModal={isOpenModal}
+              setIsOpenModal={setIsOpenModal}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 };

@@ -55,7 +55,7 @@ export default function Home() {
               </button>
             ))}
         </header>
-        <div className="relative flex flex-1">
+        <div className="relative flex flex-1 overflow-hidden">
           <div
             className={clsx(
               "transition-transform",
@@ -73,7 +73,9 @@ export default function Home() {
             />
           )}
           <div
+            id="editor-wrapper"
             className={clsx(
+              "relative",
               "transition-all",
               !sp && isMenuOpen && "ml-[200px]",
               !sp && !isMenuOpen && "ml-0",
