@@ -50,8 +50,10 @@ const CommandModal: FC<{
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
 }> = ({ isOpenModal, setIsOpenModal }) => {
   const commandList = [
-    { name: "太字(bold)", shortcut: ["⌘", "b"] },
-    { name: "斜字(italic)", shortcut: ["⌘", "i"] },
+    { name: "太字", shortcut: ["⌘", "b"] },
+    { name: "斜字", shortcut: ["⌘", "i"] },
+    { name: "打ち消し線", shortcut: ["⌘", "shift", "x"] },
+    { name: "コード", shortcut: ["⌘", "e"] },
   ];
   return (
     <Modal
