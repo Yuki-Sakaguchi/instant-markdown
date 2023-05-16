@@ -58,8 +58,8 @@ const CommandModal: FC<{
   return (
     <Modal
       isOpen={isOpenModal}
-      overlayClassName="absolute inset-0 bg-opacity-75 bg-white"
-      parentSelector={() => document.querySelector("#editor")!}
+      overlayClassName="absolute inset-0 bg-opacity-75 bg-white z-50"
+      parentSelector={() => document.querySelector("#editor-wrapper")!}
       shouldCloseOnOverlayClick={true}
       onRequestClose={() => setIsOpenModal(false)}
     >
@@ -108,6 +108,58 @@ const CommandModal: FC<{
         </table>
       </div>
     </Modal>
+  );
+};
+
+/**
+ * ヘッダーのタグメニュー
+ */
+const HeaderMenu: FC<{ editor: Editor }> = ({ editor }) => {
+  return (
+    <div className="fixed w-full bg-gray-200 px-4 py-2 z-20 flex gap-3">
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 1 }).run()
+        }
+      >
+        <i className="ri-h-1"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 2 }).run()
+        }
+      >
+        <i className="ri-h-2"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 3 }).run()
+        }
+      >
+        <i className="ri-h-3"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 4 }).run()
+        }
+      >
+        <i className="ri-h-4"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 5 }).run()
+        }
+      >
+        <i className="ri-h-5"></i>
+      </button>
+      <button
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 6 }).run()
+        }
+      >
+        <i className="ri-h-6"></i>
+      </button>
+    </div>
   );
 };
 
@@ -217,43 +269,46 @@ export const Tiptap: FC = () => {
   }, [selectedItem, editor]);
 
   return (
-    <div id="editor" className="relative h-full pl-4">
-      {selectedItem == null ? (
-        <div className="h-full flex justify-center items-center">
-          <AboutView />
-        </div>
-      ) : (
-        <div className="overflow-scroll relative h-full flex flex-col py-4">
-          <div className="mb-4">
-            <time className="block text-xs text-gray-400">
-              作成日 : {formatDate(selectedItem.createdAt)}
-            </time>
-            <time className="block text-xs text-gray-400">
-              更新日 : {formatDate(selectedItem.updatedAt)}
-            </time>
-            <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
+    <>
+      {editor != null && selectedItem != null && <HeaderMenu editor={editor} />}
+      <div id="editor" className="relative h-full pl-4">
+        {selectedItem == null ? (
+          <div className="h-full flex justify-center items-center">
+            <AboutView />
           </div>
-          <EditorContent className="flex-1" editor={editor} />
-          <div className="flex flex-col absolute top-3 right-3 p-2">
-            <button
-              className="transition-opacity opacity-50 hover:opacity-100"
-              onClick={deleteItem}
-            >
-              <TrashIcon className="w-[20px]" />
-            </button>
-            <button
-              className="mt-5 transition-opacity opacity-50 hover:opacity-100"
-              onClick={() => setIsOpenModal(true)}
-            >
-              <ExclamationCircleIcon className="w-[20px]" />
-            </button>
+        ) : (
+          <div className="overflow-scroll relative h-full flex flex-col pt-16 pb-4">
+            <div className="flex flex-col absolute top-12 right-3 p-2">
+              <button
+                className="transition-opacity opacity-50 hover:opacity-100"
+                onClick={deleteItem}
+              >
+                <TrashIcon className="w-[20px]" />
+              </button>
+              <button
+                className="mt-5 transition-opacity opacity-50 hover:opacity-100"
+                onClick={() => setIsOpenModal(true)}
+              >
+                <ExclamationCircleIcon className="w-[20px]" />
+              </button>
+            </div>
+            <div className="mb-4">
+              <time className="block text-xs text-gray-400">
+                作成日 : {formatDate(selectedItem.createdAt)}
+              </time>
+              <time className="block text-xs text-gray-400">
+                更新日 : {formatDate(selectedItem.updatedAt)}
+              </time>
+              <hr className="w-[200px] mt-4 border-0 border-dashed border-t-2" />
+            </div>
+            <EditorContent className="flex-1" editor={editor} />
+            <CommandModal
+              isOpenModal={isOpenModal}
+              setIsOpenModal={setIsOpenModal}
+            />
           </div>
-          <CommandModal
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
