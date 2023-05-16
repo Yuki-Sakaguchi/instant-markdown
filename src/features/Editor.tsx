@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, useEffect, useState } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -9,8 +9,12 @@ import { TrashIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { handleDropImage } from "@/utils/ImageLoader";
 import Modal from "react-modal";
+import { SetStateAction } from "jotai";
 Modal.setAppElement("#__next");
 
+/**
+ * エディター以外のデフォルト表示
+ */
 const AboutView: FC = () => {
   return (
     <div className="px-5">
@@ -38,6 +42,76 @@ const AboutView: FC = () => {
   );
 };
 
+/**
+ * コマンドのショートカットを表示するモーダル
+ */
+const CommandModal: FC<{
+  isOpenModal: boolean;
+  setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+}> = ({ isOpenModal, setIsOpenModal }) => {
+  const commandList = [
+    { name: "太字(bold)", shortcut: ["⌘", "b"] },
+    { name: "斜字(italic)", shortcut: ["⌘", "i"] },
+  ];
+  return (
+    <Modal
+      isOpen={isOpenModal}
+      overlayClassName="absolute inset-0 bg-opacity-75 bg-white"
+      parentSelector={() => document.querySelector("#editor")!}
+      shouldCloseOnOverlayClick={true}
+      onRequestClose={() => setIsOpenModal(false)}
+    >
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                コマンド
+              </th>
+              <th scope="col" className="px-6 py-3">
+                ショートカット
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {commandList.map(({ name, shortcut }, index) => (
+              <tr
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                key={index}
+              >
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {name}
+                </th>
+                <td className="px-6 py-4">
+                  <p
+                    className="flex"
+                    dangerouslySetInnerHTML={{
+                      __html: shortcut
+                        .map(
+                          (command) =>
+                            "<pre style='background-color: rgba(0, 0, 0, 0.1); padding: 2px 6px; margin: 0 4px; border-radius: 2px'>" +
+                            command +
+                            "</pre>"
+                        )
+                        .join("+"),
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Modal>
+  );
+};
+
+/**
+ * IMEかどうか判定するhooks
+ */
 function useComposing() {
   const [isComposing, setIsComposing] = useState(false);
 
@@ -172,16 +246,10 @@ export const Tiptap: FC = () => {
               <ExclamationCircleIcon className="w-[20px]" />
             </button>
           </div>
-          <Modal
-            isOpen={isOpenModal}
-            overlayClassName="absolute inset-0 bg-opacity-75 bg-white"
-            parentSelector={() => document.querySelector("#editor")!}
-            shouldCloseOnOverlayClick={true}
-            onRequestClose={() => setIsOpenModal(false)}
-          >
-            test
-            <button onClick={() => setIsOpenModal(false)}></button>
-          </Modal>
+          <CommandModal
+            isOpenModal={isOpenModal}
+            setIsOpenModal={setIsOpenModal}
+          />
         </div>
       )}
     </div>
